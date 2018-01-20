@@ -1,0 +1,91 @@
+docker停用全部容器：docker stop $(docker ps -q)
+
+docker删除全部容器：docker rm $(docker ps -aq)
+
+docker删除全部镜像：docker rmi $(docker images -q)
+
+mysql数据库权限：chown -R mysql:mysql /var/lib/mysql 		mysql数据库启动：/etc/init.d/mysql start
+
+mysql启动：service mysql start		开启22端口：service ssh start
+
+查看端口：netstat -an	
+
+宿主机-容器-映射文件夹：docker run -it -v /Users/shizijie/Downloads/test/:/mnt/software id /bin/bash
+
+移动jdk目录：mv jdk1.6/ /opt/jdk/
+
+移动tomcat目录： mv tomcat7/ /opt/tomcat/
+
+创建运行脚本：touch /root/run.sh
+
+安装vim：apt-get install vim
+
+java环境变量设置：
+	-- vi /etc/environment
+	export JAVA_HOME=/opt/jdk
+	export JRE_HOME=/opt/jdk/jre 
+	export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH 
+	export PATH=$JAVA_HOME/bin:$PATH
+	-- source /etc/environment
+
+编辑run.sh：
+	#!/bin/bash
+	export JAVA_HOME=/opt/jdk/
+	export PATH=$JAVA_HOME/bin:$PATH
+	sh /opt/tomcat/bin/catalina.sh run
+
+添加run.sh执行权限：chmod u+x /root/run.sh
+
+添加映射：docker run -d -p 58080:8080 tkxt1.0 /root/run.sh
+
+		docker run -d -p 58080:8080 -p 53306:3306 -p 22:22 linux1.0 /bin/bash -c "while true;do sleep 1;done"
+
+		docker run -d -p 422:22 -p 41521:1521 wnameless/oracle-xe-11g
+
+进入容器：docker exec -it id /bin/bash
+
+保持容器运行： /bin/bash -c "while true;do sleep 1;done"
+
+建库语句：
+	create database tkxt default character set utf8 collate utf8_general_ci;
+	flush privileges;
+
+将root用户授权给所有连接：
+	grant all privileges on *.* to 'root'@'%' identified by '123456';
+	flush privileges;​
+
+删除全表：
+	SELECT CONCAT('drop table ',table_name,';') FROM information_schema.`TABLES` WHERE table_schema='tkxt';
+
+mysql开启3306：
+	vi /etc/mysql/mysql.conf.d/mysqld.cnf
+	添加’#‘在‘bind-address = 127.0.0.1’前
+
+oracle创建用户：
+	1.登录oracle：sqlplus system/oracle
+	2.创建用户：create user shizijie identified by 123456;
+	3.授予权限：grant resource,connect to shizijie;
+	4.切换用户：conn HZYXY_BI/HZYXY_BI;
+	5.修改密码：alter user system identified by password;
+
+配置Docker加速器
+您可以使用如下的脚本将mirror的配置添加到docker daemon的启动参数中。
+	docker-machine ssh default "echo 'EXTRA_ARGS=\"--registry-mirror=https://pee6w651.mirror.aliyuncs.com\"' | sudo tee -a /var/lib/boot2docker/profile"
+	docker-machine restart default
+
+mac硬盘文件变灰解决：
+	xattr -r -d com.apple.FinderInfo .
+
+tomcat启动不打项目名：
+	<Context   path=""   docBase="/Users/shizijie/Library/tomcat7/webapps/tkxt"   debug="0"/>
+
+docker镜像保存：
+	docker save images_name > /Users/shizijie/Documents/images.tar
+docker镜像读取：
+	docker load < /Users/shizijie/Documents/images.tar
+
+
+
+
+
+
